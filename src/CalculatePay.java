@@ -1,58 +1,48 @@
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import javax.swing.*;
 
-public class CalculatePay {
-    public static void main(String[] args) {
-        //code which user inputs how many hours they worked, how much they make,
-        //then outputs their gross pay and after taces which would be * .75
+public class CalculatePay extends MyFrame {
 
-        Scanner myObj = new Scanner(System.in);
+    public static void askForInfo () {
+        String pay;
+        String hours;
 
-        //ask user for how many hours they worked this week, save as a integer
-        System.out.println("How many hours did you work?  ");
+        Integer w = null;
+        while (true) {
 
-        boolean validInput = false;
-        int hours = 0;
+            hours = JOptionPane.showInputDialog(null, "How many hours did you work? ");
 
-        //if user inputs string etc, it will prompt user for integer
-        while(!validInput) {
             try {
-                hours = myObj.nextInt();
-                if (hours >= 0)
-                validInput = true;
-                else
-                    System.err.println("Please enter positive number");
-            }
-
-            catch(InputMismatchException e) {
-                System.err.println("Please enter whole numbers");
-                myObj.next();
+                w = Integer.parseInt(hours);
+                break;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Enter a valid hour", "error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
-        //ask how much they make
-        System.out.println("How much do you make per hour?:  ");
+        Double ww = null;
+        while (true) {
 
-        boolean validInput1 = false;
-        double pay = 0;
+            pay = JOptionPane.showInputDialog(null, "How much do you make?");
 
-        while(!validInput1) {
             try {
-                pay = myObj.nextDouble();
-                if (pay >= 0)
-                validInput1 = true;
-                else
-                    System.err.println("Please enter positive number");
-
-            } catch(InputMismatchException e) {
-                System.err.println("Please enter valid format");
-                myObj.next();
+                ww = Double.parseDouble(pay);
+                break;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Enter valid pay", "error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
-        //calculate pay
+        double payArray[] = calculatePay(hours, pay);
+
+        JOptionPane.showMessageDialog(null, "Your Gross Pay is $" + payArray[0] + ". Your Net Pay is $" + payArray[1]);
+    }
+
+    public static double[] calculatePay (String h, String p) {
         double grossPay;
         double netPay;
+        double [] payArray = new double[2];
+        int hours = Integer.parseInt(h);
+        double pay = Double.parseDouble(p);
 
         if (hours > 40.00) {
             grossPay = ((pay * 40.00) + pay * 1.50 * (hours - 40.00));
@@ -63,9 +53,13 @@ public class CalculatePay {
 
         netPay = (grossPay * 0.75);
 
-        //print results
-        System.out.printf("Your Gross Pay per week is $" + "%.2f" + "\n" ,grossPay);
-        System.out.printf("Your Net Pay is around $" + "%.2f" + " per week!" + "\n", netPay);
+        payArray[0] = grossPay;
+        payArray[1] = netPay;
 
+        return payArray;
+    }
+
+    public static void main(String[] args) {
+        new MyFrame();
     }
 }
